@@ -50,14 +50,12 @@ export async function signup(req, res) {
       expiresIn: "7d",
     });
 
-    res.cookie("jwt", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true, // prevent XSS attacks,
-      sameSite: "strict", // prevent CSRF attacks
-      secure: process.env.NODE_ENV === "production",
+    // CHANGED: Return token instead of setting cookie
+    res.status(201).json({ 
+      success: true, 
+      user: newUser,
+      token: token  // Add token to response
     });
-
-    res.status(201).json({ success: true, user: newUser });
   } catch (error) {
     console.log("Error in signup controller", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -82,14 +80,12 @@ export async function login(req, res) {
       expiresIn: "7d",
     });
 
-    res.cookie("jwt", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true, // prevent XSS attacks,
-      sameSite: "strict", // prevent CSRF attacks
-      secure: process.env.NODE_ENV === "production",
+    // CHANGED: Return token instead of setting cookie
+    res.status(200).json({ 
+      success: true, 
+      user: user,
+      token: token  // Add token to response
     });
-
-    res.status(200).json({ success: true, user });
   } catch (error) {
     console.log("Error in login controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
@@ -97,7 +93,7 @@ export async function login(req, res) {
 }
 
 export function logout(req, res) {
-  res.clearCookie("jwt");
+  // CHANGED: Just return success (frontend will remove token)
   res.status(200).json({ success: true, message: "Logout successful" });
 }
 

@@ -1,6 +1,5 @@
 import express from "express";
 import "dotenv/config";
-import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRoutes from "../src/routes/auth.route.js";
 import userRoutes from "../src/routes/user.route.js";
@@ -10,16 +9,14 @@ import { connectDB } from "../src/lib/db.js";
 const app = express();
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL 
+  origin: process.env.NODE_ENV === 'production'
+    ? process.env.FRONTEND_URL
     : "http://localhost:5173",
-  credentials: true,
+  credentials: true, // Can keep this for other purposes
 }));
 
 app.use(express.json());
-app.use(cookieParser());
 
-// Connect to DB on each request (cached in your connectDB function)
 app.use(async (req, res, next) => {
   await connectDB();
   next();
