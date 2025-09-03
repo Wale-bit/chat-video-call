@@ -32,26 +32,18 @@ export const logout = async () => {
 };
 
 export const getAuthUser = async () => {
+  const token = getToken();
+  if (!token) return null;
+
   try {
-    // Check if token exists first
-    const token = getToken();
-    if (!token) {
-      return null;
-    }
-    
     const res = await axiosInstance.get("/auth/me");
     return res.data;
   } catch (error) {
-    console.log("Error in getAuthUser:", error);
-    
-    // If unauthorized, remove invalid token
-    if (error.response?.status === 401) {
-      removeToken();
-    }
-    
+    if (error.response?.status === 401) removeToken();
     return null;
   }
 };
+
 
 export const completeOnboarding = async (userData) => {
   const response = await axiosInstance.post("/auth/onboarding", userData);

@@ -1,31 +1,29 @@
 import { useState } from "react";
 import { ShipWheelIcon } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useLogin from "../hooks/useLogin";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
 
-  // This is how we did it at first, without using our custom hook
-  // const queryClient = useQueryClient();
-  // const {
-  //   mutate: loginMutation,
-  //   isPending,
-  //   error,
-  // } = useMutation({
-  //   mutationFn: login,
-  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
-  // });
-
-  // This is how we did it using our custom hook - optimized version
   const { isPending, error, loginMutation } = useLogin();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    loginMutation(loginData);
+    loginMutation(loginData, {
+      onSuccess: (data) => {
+        // decide where to go after login
+        if (data.user?.isOnboarded) {
+          navigate("/"); // already onboarded
+        } else {
+          navigate("/onboarding"); // needs onboarding
+        }
+      },
+    });
   };
 
   return (

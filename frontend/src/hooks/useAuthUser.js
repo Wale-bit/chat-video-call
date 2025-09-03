@@ -7,13 +7,13 @@ const useAuthUser = () => {
     queryKey: ["authUser"],
     queryFn: getAuthUser,
     retry: false,
-    // ADDED: Only run query if token exists
-    enabled: !!getToken(),
+    // Always enable query, handle no-token inside getAuthUser
+    enabled: true,
   });
 
   return { 
     isLoading: authUser.isLoading, 
-    authUser: authUser.data?.user 
+    authUser: authUser.data?.user || null 
   };
 };
 
