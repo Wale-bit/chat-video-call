@@ -45,11 +45,24 @@ const LoginPage = () => {
           </div>
 
           {/* ERROR MESSAGE DISPLAY */}
-          {error && (
-            <div className="alert alert-error mb-4">
-              <span>{error.response.data.message}</span>
-            </div>
-          )}
+            {error && (
+              <div className="alert alert-error mb-4">
+                <span>
+                  {(() => {
+                    if (error?.response?.data?.message) {
+                      return error.response.data.message;
+                    }
+                    if (error?.message) {
+                      return error.message;
+                    }
+                    if (typeof error === 'string') {
+                      return error;
+                    }
+                    return 'An error occurred during login';
+                  })()}
+                </span>
+              </div>
+            )}
 
           <div className="w-full">
             <form onSubmit={handleLogin}>
