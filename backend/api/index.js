@@ -9,10 +9,8 @@ import { connectDB } from "../src/lib/db.js";
 const app = express();
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? process.env.FRONTEND_URL
-    : "http://localhost:5173",
-  credentials: true, // Can keep this for other purposes
+  origin: process.env.FRONTEND_URL,
+  credentials: true, // Only if you plan to use cookies
 }));
 
 app.use(express.json());
